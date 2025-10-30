@@ -169,7 +169,7 @@ head(tt22_long)
 head(tt23_long)
 ```
 
-Each dataset contains energy sources, which are the rows, and states, which are the columns, that are converted into a longer format using a pivot. This structure makes it easier to compare energy source totals and join over multiple years. Across years, the same energy categories appear (Coal, Natural Gas, Petroleum \[BTU\], Nuclear, and Total Renewables), allowing a consistent cross-year analysis. After merging, the combined dataset was filtered to include only Coal and Total Renewables, since these two sources are directly relevant to the research question.
+Each dataset contains energy sources, which are the rows, and states, which are the columns, that are converted into a longer format using a pivot. This structure makes it easier to compare energy source totals and join over multiple years. Across years, the same energy categories appear (Coal, Natural Gas, Petroleum, Nuclear, and Total Renewables), allowing a consistent cross-year analysis. After merging, the combined dataset was filtered to include only Coal and Total Renewables, since these two sources are directly relevant to the research question.
 
 ```{r}
 energy_long
@@ -232,7 +232,7 @@ ggplot(map_join) +
   )
 ```
 
-The map shows each state’s percentage of renewable energy out of its coal and renewable total for 2021, 2022, and 2023. The color gradient from light pink to dark purple represents increasing renewable share. In 2021, most states appear in lighter pink shades, indicating that renewables made up a smaller fraction of the coal and renewable mix—often below 40%. The Western states such as California, Oregon, and Washington already show darker purple hues, reflecting their strong hydroelectric and solar capacity. By 2022, those same states maintain high renewable shares, but states like Iowa, Kansas, and Nebraska begin to darken. By 2023, the map shows an overall deepening of color intensity across much of the Western half of the country and parts of the Northeast. This suggests that renewables have had more implementation and usage relative to coal nationwide, though the Southeast and portions of the Midwest remain comparatively light, implying a continued reliance on coal in those specific areas.
+The map shows each state’s percentage of renewable energy out of its coal and renewable total for 2021, 2022, and 2023. The color gradient from light pink to dark purple represents increasing renewable share. In 2021, most states appear in lighter pink shades, indicating that renewables made up a smaller fraction of the coal and renewable mix even below 40%. The Western states such as California, Oregon, and Washington already show darker purple hues, reflecting their strong hydroelectric and solar capacity. By 2022, those same states maintain high renewable shares, but states like Iowa, Kansas, and Nebraska begin to darken. By 2023, the map shows an overall deepening of color intensity across much of the Western half of the country and parts of the Northeast. This suggests that renewables have had more implementation and usage relative to coal nationwide, though the Southeast and portions of the Midwest remain comparatively light, implying a continued reliance on coal in those specific areas.
 
 ## **Analysis and Final Remarks**
 
