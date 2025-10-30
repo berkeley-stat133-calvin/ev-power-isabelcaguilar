@@ -10,11 +10,11 @@ author: Isabel Aguilar
 
 How has coal consumption changed across states from 2021 to 2023 in comparison to total renewable energy consumption within that same time frame?
 
-## **Overviewe**
+## **Overview**
 
 This project investigates how the consumption of renewable energy has changed compared to that of coal across U.S. states between 2021 and 2023.
 
-The goal of this project is to determine whether states are generating a higher proportion of renewable energy over time relative to coal. I chose to compare coal consumption to total renewables because coal historically has been one of the largest contributors to U.S. electricity generation but also one of the most harmful for the environment because of the sheer amount of carbon it uses. In recent years, renewable energy sources have emerged as a way to solve this problem of environmental degradation. Total renewables, including solar, wind, hydropower, biomass, and geothermal power, represent the future of clean energy production and signal progress toward sustainable, low-carbon electricity. This is a very important question for understanding whether the electricity that powers electric vehicles truly comes from the cleaner sources of the future or the carbon-intensive ones of the past.
+The goal of this project is to determine whether states are generating a higher proportion of renewable energy over time relative to coal. I chose to compare coal consumption to total renewables because coal historically has been one of the largest contributors to U.S. electricity generation but also one of the most harmful for the environment because of the sheer amount of carbon it uses. In recent years, renewable energy sources have emerged as a way to solve this problem of environmental degradation. Total renewables, including solar, wind, hydropower, biomass, and geothermal power, represent the future of clean energy production and signal progress toward sustainable, low carbon electricity. This is a very important question for understanding whether the electricity that powers electric vehicles truly comes from the cleaner sources of the future or the carbon-intensive ones of the past.
 
 The analysis focuses on the percentage of renewable energy out of the combined total of coal and renewables in each state. By comparing this ratio across years, we can identify trends in the national shift toward sustainable power.
 
