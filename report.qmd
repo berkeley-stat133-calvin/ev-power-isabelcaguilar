@@ -169,7 +169,7 @@ head(tt22_long)
 head(tt23_long)
 ```
 
-Each dataset (tt21_long, tt22_long, tt23_long) contains energy sources, which are the rows, and states, which are the columns, that are converted into a longer format using a pivot. This structure makes it easier to compare energy source totals and join over multiple years. Across years, the same energy categories appear (Coal, Natural Gas, Petroleum \[BTU\], Nuclear, and Total Renewables), allowing a consistent cross-year analysis. After merging, the combined dataset was filtered to include only Coal and Total Renewables, since these two sources are directly relevant to the research question.
+Each dataset contains energy sources, which are the rows, and states, which are the columns, that are converted into a longer format using a pivot. This structure makes it easier to compare energy source totals and join over multiple years. Across years, the same energy categories appear (Coal, Natural Gas, Petroleum \[BTU\], Nuclear, and Total Renewables), allowing a consistent cross-year analysis. After merging, the combined dataset was filtered to include only Coal and Total Renewables, since these two sources are directly relevant to the research question.
 
 ```{r}
 energy_long
