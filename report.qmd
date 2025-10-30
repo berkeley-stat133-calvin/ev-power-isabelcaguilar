@@ -1,34 +1,239 @@
 ---
 title: "EV Power - Lab 4 Project Report"
 format: typst
+author: Isabel Aguilar
 ---
 
-# Example Solution 1
+# The change in renewable energy consumption compared to coal consumption across states from 2021 to 2023
 
-## **Part 0: libraries**
+## **Research Question**
+
+How has coal consumption changed across states from 2021 to 2023 in comparison to total renewable energy consumption within that same time frame?
+
+## **Overviewe**
+
+This project investigates how the consumption of renewable energy has changed compared to that of coal across U.S. states between 2021 and 2023.
+
+The goal of this project is to determine whether states are generating a higher proportion of renewable energy over time relative to coal. I chose to compare coal consumption to total renewables because coal historically has been one of the largest contributors to U.S. electricity generation but also one of the most harmful for the environment because of the sheer amount of carbon it uses. In recent years, renewable energy sources have emerged as a way to solve this problem of environmental degradation. Total renewables, including solar, wind, hydropower, biomass, and geothermal power, represent the future of clean energy production and signal progress toward sustainable, low-carbon electricity. This is a very important question for understanding whether the electricity that powers electric vehicles truly comes from the cleaner sources of the future or the carbon-intensive ones of the past.
+
+The analysis focuses on the percentage of renewable energy out of the combined total of coal and renewables in each state. By comparing this ratio across years, we can identify trends in the national shift toward sustainable power.
+
+## **Data Preparation and Cleaning Code**
+
+```{r}
+library(tidyverse)
+install.packages("sf")
+library(sf)
+```
 
 ```{r}
 
+renew2021 <- read_csv("~/Desktop/stat133/project4/ev-power-isabelcaguilar/data/renew-use-2021.csv")
+renew2022 <- read_csv("~/Desktop/stat133/project4/ev-power-isabelcaguilar/data/renew-use-2022.csv")
+renew2023 <- read_csv("~/Desktop/stat133/project4/ev-power-isabelcaguilar/data/renew-use-2023.csv")
+total2021 <- read_csv("~/Desktop/stat133/project4/ev-power-isabelcaguilar/data/total-use-2021.csv")
+total2022 <- read_csv("~/Desktop/stat133/project4/ev-power-isabelcaguilar/data/total-use-2022.csv")
+total2023 <- read_csv("~/Desktop/stat133/project4/ev-power-isabelcaguilar/data/total-use-2023.csv")
+
+
+cleaner <- function(df) {
+  df |>
+    rename_with(~ str_replace_all(., " ", "_")) |>
+    rename_with(~ str_replace_all(., "-", "_")) |>
+    rename_with(~ str_replace_all(., "\\(", "")) |>
+    rename_with(~ str_replace_all(., "\\)", "")) |>
+    rename_with(tolower)
+}
+
+renew2021 <- cleaner(renew2021)
+renew2022 <- cleaner(renew2022)
+renew2023 <- cleaner(renew2023)
+
+total2021 <- cleaner(total2021)
+total2022 <- cleaner(total2022)
+total2023 <- cleaner(total2023)
+
+
+total2021 <- total2021 |>
+  mutate(energy_source = str_to_lower(str_trim(energy_source))) |>
+  mutate(energy_source = case_when(
+    str_detect(energy_source, "coal") ~ "coal",
+    str_detect(energy_source, "total_renew") ~ "total_renewables",
+    TRUE ~ energy_source
+  ))
+
+total2022 <- total2022 |>
+  mutate(energy_source = str_to_lower(str_trim(energy_source))) |>
+  mutate(energy_source = case_when(
+    str_detect(energy_source, "coal") ~ "coal",
+    str_detect(energy_source, "total_renew") ~ "total_renewables",
+    TRUE ~ energy_source
+  ))
+
+total2023 <- total2023 |>
+  mutate(energy_source = str_to_lower(str_trim(energy_source))) |>
+  mutate(energy_source = case_when(
+    str_detect(energy_source, "coal") ~ "coal",
+    str_detect(energy_source, "total_renew") ~ "total_renewables",
+    TRUE ~ energy_source
+  ))
+
+colnames(total2021) <- str_to_upper(colnames(total2021))
+colnames(total2022) <- str_to_upper(colnames(total2022))
+colnames(total2023) <- str_to_upper(colnames(total2023))
+
+print(paste("missing values in total2021:", sum(is.na(total2021))))
+print(paste("missing values in total2022:", sum(is.na(total2022))))
+print(paste("missing values in total2023:", sum(is.na(total2023))))
+
+tt21 <- total2021 |> mutate(year = 2021)
+tt22 <- total2022 |> mutate(year = 2022)
+tt23 <- total2023 |> mutate(year = 2023)
+
+
 ```
-
-## **Part 1:** **Defining Research Question**
-
-Chosen Question:
-
-## **Part 2: Data Preparation and Cleaning**
 
 ```{r}
-
+head(tt21_long)
+head(tt22_long)
+head(tt23_long)
 ```
 
-## **Part 3: Joining / Pivoting Datasets for Analysis**
+Each dataset (tt21_long, tt22_long, tt23_long) contains energy sources, which are the rows, and states, which are the columns, that are converted into a longer format using a pivot. This structure makes it easier to compare energy source totals and join over multiple years. Across years, the same energy categories appear (Coal, Natural Gas, Petroleum \[BTU\], Nuclear, and Total Renewables), allowing a consistent cross-year analysis. After merging, the combined dataset was filtered to include only Coal and Total Renewables, since these two sources are directly relevant to the research question.
+
+## **Part 3: Joining / Pivoting Code**
 
 ```{r}
+# Pivot from wide to long to make the states all go in one column for the 2021 year
+tt21_long <- tt21 |>
+  pivot_longer(
+    cols = -c(ENERGY_SOURCE, year),
+    names_to = "state",
+    values_to = "energy_use"
+  )
+# Pivot from wide to long to make the states all go in one column for the 2022 year
+tt22_long <- tt22 |>
+  pivot_longer(
+    cols = -c(ENERGY_SOURCE, year),
+    names_to = "state",
+    values_to = "energy_use"
+  )
+# Pivot from wide to long to make the states all go in one column for the 2023 year
+tt23_long <- tt23 |>
+  pivot_longer(
+    cols = -c(ENERGY_SOURCE, year),
+    names_to = "state",
+    values_to = "energy_use"
+  )
+
+#The 2021–2023 total energy datasets (tt21, tt22, tt23) were merged to combine state data at each year
+# This way, A direct compatiosn can be made between coal and renewable energy use across years each of the years and per state
+#this allows me to answer my research question of how coal consumption has changed across states from 2021 to 2023 
+# in comparison to total renewable energy in the same time frame
+
+energy_long <- bind_rows(tt21_long, tt22_long, tt23_long)
+
+energy_long <- energy_long |>
+  mutate(ENERGY_SOURCE = str_to_lower(str_trim(ENERGY_SOURCE))) |>
+  mutate(ENERGY_SOURCE = case_when(
+    str_detect(ENERGY_SOURCE, "coal") ~ "coal",
+    str_detect(ENERGY_SOURCE, "renew") ~ "total_renewables",
+    TRUE ~ ENERGY_SOURCE
+  ))
+
+# This is filtering only for the energy sources I am comparing (the relevant ones : coal and total_renewables)
+energy_fill <- energy_long |>
+  filter(ENERGY_SOURCE %in% c("coal", "total_renewables")) |>
+  filter(!is.na(energy_use))
+
+# Pivot wider is done to get one row per state and by year!
+energy_wide <- energy_fill |>
+  pivot_wider(
+    names_from = ENERGY_SOURCE,
+    values_from = energy_use
+  )
+
+# new variable made to show the percent renewable of the 2 energy sources I am comapring
+energy_wide <- energy_wide |>
+  mutate(
+    total_energy_twosource = coal + total_renewables,
+    percent_renewable = (total_renewables / total_energy_twosource) * 100
+  )
+
+# This is a summary table of the average energy sources that I chose!
+energy_summary <- energy_wide |>
+  group_by(year) |>
+  summarise(
+    avg_coal = mean(coal, na.rm = TRUE),
+    avg_renew = mean(total_renewables, na.rm = TRUE),
+    avg_percent_renewable = mean(percent_renewable, na.rm = TRUE)
+  )
 
 ```
+
+```{r}
+energy_long
+```
+
+This table merges coal and renewable energy data for each state and year. Each row includes numeric values for coal and renewable energy consumption, as well as the calculated percentage of renewable energy out of coal and renewables.
+
+```{r}
+energy_summary
+```
+
+This table shows the mean coal usage, mean renewable usage, and average renewable percentage per year. It reveals that renewable energy’s share increased from 2021 to 2023, while average coal use decreased, suggesting gradual national progress toward cleaner energy sources.
 
 ## **Part 4: Mapping Visualization**
 
 ```{r}
+energy_wide <- energy_wide |>
+  mutate(
+    percent_renewable_coal = (total_renewables / (coal + total_renewables)) * 100
+  )
 
+map_data <- energy_wide |>
+  select(state, year, percent_renewable_coal) |>
+  mutate(state = tolower(state)) |>
+  mutate(state = state.name[match(toupper(state), state.abb)]) |>
+  mutate(state = tolower(state)) |>
+  filter(!is.na(year))
+
+usa <- st_read(
+  "https://raw.githubusercontent.com/PublicaMundi/MappingAPI/master/data/geojson/us-states.json",
+  quiet = TRUE
+)
+
+usa <- usa |>
+  mutate(state = tolower(name))
+
+map_join <- left_join(usa, map_data, by = "state") |>
+  filter(!is.na(year))
+
+ggplot(map_join) +
+  geom_sf(aes(fill = percent_renewable_coal), color = "white") +
+  facet_wrap(~year) +
+  scale_fill_gradient(
+    low = "#FAD0C4", 
+    high = "#6A0DAD",
+    name = "% Renewable (of Coal and Renewables)"
+  ) +
+  labs(
+    title = "Renewable Energy Share Out of Coal & Renewables in 2021 - 2023",
+    subtitle = "Darker purple shows a higher renewable share relative to coal") +
+  theme_minimal() +
+  theme(
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
+    panel.grid = element_blank(),
+    legend.position = "bottom",
+    plot.title = element_text(face = "bold", size = 11),
+    plot.subtitle = element_text(size = 9),
+    strip.text = element_text(face = "bold")
+  )
 ```
+
+The map shows each state’s percentage of renewable energy out of its coal and renewable total for 2021, 2022, and 2023. The color gradient from light pink to dark purple represents increasing renewable share. In 2021, most states appear in lighter pink shades, indicating that renewables made up a smaller fraction of the coal and renewable mix—often below 40%. The Western states such as California, Oregon, and Washington already show darker purple hues, reflecting their strong hydroelectric and solar capacity. By 2022, those same states maintain high renewable shares, but states like Iowa, Kansas, and Nebraska begin to darken. By 2023, the map shows an overall deepening of color intensity across much of the Western half of the country and parts of the Northeast. This suggests that renewables have had more implementation and usage relative to coal nationwide, though the Southeast and portions of the Midwest remain comparatively light, implying a continued reliance on coal in those specific areas.
+
+## **Analysis and Final Remarks**
+
+The map visualization compares the percentage of renewable energy out of the combined coal and renewable total for each U.S. state from 2021 to 2023. Across the three panels, a visible shift occurs toward darker purple tones, meaning a larger proportion of total energy generation is coming from renewable sources. In the larger context of this project’s bigger question, whether electric vehicle power is coming from the clean energy sources of the future or the unsustainable ones of the past this data supports the conclusion that as coal generation declines and renewables expand, the grid supplying EVs becomes less carbon-intensive and actually cleaner. However, this progression is quite slow and difficult to track over the three year jump. Additionally, the progress is not the same everywhere across the map. In fact, the South has shown much slower progression toward cleaner energy sources than the West Coast.
