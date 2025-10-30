@@ -22,7 +22,6 @@ The analysis focuses on the percentage of renewable energy out of the combined t
 
 ```{r}
 library(tidyverse)
-install.packages("sf")
 library(sf)
 ```
 
@@ -93,13 +92,6 @@ tt23 <- total2023 |> mutate(year = 2023)
 
 ```
 
-```{r}
-head(tt21_long)
-head(tt22_long)
-head(tt23_long)
-```
-
-Each dataset (tt21_long, tt22_long, tt23_long) contains energy sources, which are the rows, and states, which are the columns, that are converted into a longer format using a pivot. This structure makes it easier to compare energy source totals and join over multiple years. Across years, the same energy categories appear (Coal, Natural Gas, Petroleum \[BTU\], Nuclear, and Total Renewables), allowing a consistent cross-year analysis. After merging, the combined dataset was filtered to include only Coal and Total Renewables, since these two sources are directly relevant to the research question.
 
 ## **Part 3: Joining / Pivoting Code**
 
@@ -170,6 +162,14 @@ energy_summary <- energy_wide |>
   )
 
 ```
+
+```{r}
+head(tt21_long)
+head(tt22_long)
+head(tt23_long)
+```
+
+Each dataset (tt21_long, tt22_long, tt23_long) contains energy sources, which are the rows, and states, which are the columns, that are converted into a longer format using a pivot. This structure makes it easier to compare energy source totals and join over multiple years. Across years, the same energy categories appear (Coal, Natural Gas, Petroleum \[BTU\], Nuclear, and Total Renewables), allowing a consistent cross-year analysis. After merging, the combined dataset was filtered to include only Coal and Total Renewables, since these two sources are directly relevant to the research question.
 
 ```{r}
 energy_long
